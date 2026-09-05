@@ -39,8 +39,13 @@ pygame.display.set_caption('Змейка')
 clock = pygame.time.Clock()
 
 
-# Тут опишите все классы игры.
-...
+class GameObject:
+    def __init__(self, body_color: tuple[int, int, int]):
+        self.position: tuple[int, int] = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
+        self.body_color: tuple[int, int, int] = body_color
+
+    def draw(self) -> None:
+        pass
 
 
 def main():
@@ -52,8 +57,8 @@ def main():
     # while True:
     #     clock.tick(SPEED)
 
-        # Тут опишите основную логику игры.
-        # ...
+    # Тут опишите основную логику игры.
+    # ...
 
 
 if __name__ == '__main__':
