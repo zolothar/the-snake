@@ -40,12 +40,36 @@ clock = pygame.time.Clock()
 
 
 class GameObject:
-    def __init__(self, body_color: tuple[int, int, int]):
+    """Базовый класс для игровых объектов."""
+
+    def __init__(self) -> None:
         self.position: tuple[int, int] = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
-        self.body_color: tuple[int, int, int] = body_color
+        self.body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR
 
     def draw(self) -> None:
+        """Отрисовывает объект на поле, переопределяется в наследниках."""
         pass
+
+
+class Apple(GameObject):
+    """Яблоко - пища для змейки."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.body_color: tuple[int, int, int] = APPLE_COLOR
+        self.position = self.randomize_position()
+
+    def draw(self) -> None:
+        """Рисует яблоко на игровом поле."""
+        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+    def randomize_position(self) -> tuple[int, int]:
+        """Рассчитывает случайные координаты внутри игрового поля."""
+        position_x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
+        position_y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        return position_x, position_y
 
 
 def main():
@@ -64,12 +88,6 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-# Метод draw класса Apple
-# def draw(self):
-#     rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
-#     pygame.draw.rect(screen, self.body_color, rect)
-#     pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 # # Метод draw класса Snake
 # def draw(self):
