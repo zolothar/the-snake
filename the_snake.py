@@ -15,16 +15,9 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвет фона - черный:
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
-
-# Цвет границы ячейки
 BORDER_COLOR = (93, 216, 228)
-
-# Цвет яблока
 APPLE_COLOR = (255, 0, 0)
-
-# Цвет змейки
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
@@ -75,7 +68,7 @@ class Apple(GameObject):
 
     def draw(self) -> None:
         """Рисует яблоко на игровом поле."""
-        self.draw_cell(self.position, self.body_color)
+        self.draw_cell(self.position, self.body_color, BORDER_COLOR)
 
     def randomize_position(self,
                            snake_positions: list[tuple[int, int]] | None
@@ -125,7 +118,7 @@ class Snake(GameObject):
 
     def draw(self) -> None:
         """Рисует голову змейки и стирает хвост."""
-        self.draw_cell(self.get_head_position(), self.body_color)
+        self.draw_cell(self.get_head_position(), self.body_color, BORDER_COLOR)
         if self.last:
             self.draw_cell(self.last)
             self.last = None
