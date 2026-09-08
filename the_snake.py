@@ -4,6 +4,7 @@ import pygame
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
+SCREEN_CENTER = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
@@ -42,9 +43,12 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс для игровых объектов."""
 
-    def __init__(self) -> None:
-        self.position: tuple[int, int] = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
-        self.body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR
+    def __init__(self,
+                 body_color: tuple[int, int, int] =
+                 BOARD_BACKGROUND_COLOR,
+                 position: tuple[int, int] = SCREEN_CENTER) -> None:
+        self.position: tuple[int, int] = position
+        self.body_color: tuple[int, int, int] = body_color
 
     def draw(self) -> None:
         """Отрисовывает объект на поле, переопределяется в наследниках."""
@@ -55,9 +59,7 @@ class Apple(GameObject):
     """Яблоко - пища для змейки."""
 
     def __init__(self) -> None:
-        super().__init__()
-        self.body_color: tuple[int, int, int] = APPLE_COLOR
-        self.position = self.randomize_position()
+        super().__init__(APPLE_COLOR, Apple.randomize_position())
 
     def draw(self) -> None:
         """Рисует яблоко на игровом поле."""
@@ -65,14 +67,16 @@ class Apple(GameObject):
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-    def randomize_position(self) -> tuple[int, int]:
+    @staticmethod
+    def randomize_position() -> tuple[int, int]:
         """Рассчитывает случайные координаты внутри игрового поля."""
-        position_x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
-        position_y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        position_x: int = randint(0, GRID_WIDTH - 1) * GRID_SIZE
+        position_y: int = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
         return position_x, position_y
 
 
 def main():
+    """Описывает логику игры и игровой цикл."""
     # Инициализация PyGame:
     pygame.init()
     # Тут нужно создать экземпляры классов.
