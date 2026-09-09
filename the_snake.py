@@ -14,7 +14,7 @@
 """
 from random import choice, randint
 
-import pygame
+import pygame as pg
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -39,13 +39,13 @@ SNAKE_COLOR = (0, 255, 0)
 SPEED = 10
 
 # Настройка игрового окна:
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 # Заголовок окна игрового поля:
-pygame.display.set_caption('Змейка')
+pg.display.set_caption('Змейка')
 
 # Настройка времени:
-clock = pygame.time.Clock()
+clock = pg.time.Clock()
 
 
 class GameObject:
@@ -68,9 +68,9 @@ class GameObject:
                   border_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR
                   ) -> None:
         """Рисует одну клетку на игровом поле."""
-        rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, body_color, rect)
-        pygame.draw.rect(screen, border_color, rect, 1)
+        rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
+        pg.draw.rect(screen, body_color, rect)
+        pg.draw.rect(screen, border_color, rect, 1)
 
 
 class Apple(GameObject):
@@ -154,24 +154,24 @@ class Snake(GameObject):
 
 def handle_keys(snake: Snake) -> None:
     """Обработка нажатий клавиш."""
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            pg.quit()
             raise SystemExit
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and snake.direction != DOWN:
+        elif event.type == pg.KEYDOWN:
+            if event.key == pg.K_UP and snake.direction != DOWN:
                 snake.next_direction = UP
-            elif event.key == pygame.K_DOWN and snake.direction != UP:
+            elif event.key == pg.K_DOWN and snake.direction != UP:
                 snake.next_direction = DOWN
-            elif event.key == pygame.K_LEFT and snake.direction != RIGHT:
+            elif event.key == pg.K_LEFT and snake.direction != RIGHT:
                 snake.next_direction = LEFT
-            elif event.key == pygame.K_RIGHT and snake.direction != LEFT:
+            elif event.key == pg.K_RIGHT and snake.direction != LEFT:
                 snake.next_direction = RIGHT
 
 
 def main():
     """Создает игровые объекты и запускает игровой цикл."""
-    pygame.init()
+    pg.init()
 
     snake = Snake()
     apple = Apple(snake.positions)
@@ -189,7 +189,7 @@ def main():
             screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
         snake.draw()
-        pygame.display.update()
+        pg.display.update()
 
 
 if __name__ == '__main__':
