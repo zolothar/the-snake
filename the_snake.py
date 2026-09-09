@@ -1,3 +1,17 @@
+"""Игра «Змейка».
+
+Игрок управляет змейкой, которая движется по игровому полю.
+Цель - увеличивать длину змейки, съедая появляющиеся на экране яблоки.
+
+Архитектура скрипта the_snake.py:
+* инициализация pygame;
+* создание объектов (Snake, Apple);
+* основной игровой цикл:
+    - обработка событий;
+    - обновление состояния игры;
+    - проверка столкновений;
+    - отрисовка объектов на экране.
+"""
 from random import choice, randint
 
 import pygame
@@ -40,6 +54,7 @@ class GameObject:
     def __init__(self,
                  body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR,
                  position: tuple[int, int] = SCREEN_CENTER) -> None:
+        """Инициализирует объект базового класса цветом и координатами."""
         self.position: tuple[int, int] = position
         self.body_color: tuple[int, int, int] = body_color
 
@@ -64,6 +79,9 @@ class Apple(GameObject):
     def __init__(self,
                  snake_positions: list[tuple[int, int]] | None = None
                  ) -> None:
+        """Инициализирует яблоко, положение выбирается в случайной
+        свободной клетке.
+        """
         super().__init__(APPLE_COLOR)
         self.randomize_position(snake_positions)
 
@@ -88,6 +106,7 @@ class Snake(GameObject):
     """Змейка - перемещается по полю и поедает яблоки."""
 
     def __init__(self) -> None:
+        """Инициализирует змейку."""
         super().__init__(SNAKE_COLOR)
         self.length: int = 1
         self.positions: list[tuple[int, int]] = [SCREEN_CENTER]
