@@ -60,7 +60,8 @@ class GameObject:
 
     def draw(self) -> None:
         """Отрисовывает объект на поле, переопределяется в наследниках."""
-        pass
+        raise NotImplementedError(
+            f'Переопределите draw() в {self.__class__.__name__}')
 
     def draw_cell(self,
                   position: tuple[int, int],
@@ -157,7 +158,7 @@ def handle_keys(snake: Snake) -> None:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
-            raise SystemExit
+            raise SystemExit('Нажата кнопка выхода, игра завершена.')
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_UP and snake.direction != DOWN:
                 snake.next_direction = UP
