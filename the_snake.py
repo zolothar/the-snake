@@ -12,8 +12,9 @@
     - проверка столкновений;
     - отрисовка объектов на экране.
 """
-from random import choice, randint
 from collections.abc import Container
+from random import choice, randint
+
 import pygame as pg
 
 
