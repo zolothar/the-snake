@@ -13,8 +13,9 @@
     - отрисовка объектов на экране.
 """
 from random import choice, randint
-
+from collections.abc import Container
 import pygame as pg
+
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -78,28 +79,27 @@ class Apple(GameObject):
     """Яблоко - пища для змейки."""
 
     def __init__(self,
-                 forbidden_positions: list[tuple[int, int]] | None = None,
+                 occuped_positions: Container[tuple[int, int]] = (),
                  color: tuple[int, int, int] = APPLE_COLOR
                  ) -> None:
         """Инициализирует яблоко, положение выбирается в случайной
         свободной клетке.
         """
         super().__init__(color)
-        self.randomize_position(forbidden_positions)
+        self.randomize_position(occuped_positions)
 
     def draw(self) -> None:
         """Рисует яблоко на игровом поле."""
         self.draw_cell(self.position, self.body_color, BORDER_COLOR)
 
     def randomize_position(self,
-                           forbidden_positions: list[tuple[int, int]] | None
+                           occuped_positions: Container[tuple[int, int]] = ()
                            ) -> None:
         """Ставит яблоко в случайную точку поля."""
         while True:
             position_x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             position_y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            if (not forbidden_positions
-                    or (position_x, position_y) not in forbidden_positions):
+            if ((position_x, position_y) not in occuped_positions):
                 self.position = position_x, position_y
                 break
 
@@ -136,6 +136,8 @@ class Snake(GameObject):
         self.positions.insert(0, new_head)
         if len(self.positions) > self.length:
             self.last = self.positions.pop()
+        else:
+            self.last = None
 
     def update_direction(self) -> None:
         """Обновляет направление после нажатия на кнопку."""
@@ -148,7 +150,6 @@ class Snake(GameObject):
         self.draw_cell(self.get_head_position(), self.body_color, BORDER_COLOR)
         if self.last:
             self.draw_cell(self.last)
-            self.last = None
 
 
 def handle_keys(snake: Snake) -> None:
