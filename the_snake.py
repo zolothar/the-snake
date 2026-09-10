@@ -39,6 +39,19 @@ SNAKE_COLOR = (0, 255, 0)
 # Скорость движения змейки:
 SPEED = 10
 
+# Ключ: (клавиша, старое_направление).
+# Значение: новое_направление.
+KEY_DIRECTIONS = {
+    (pg.K_UP, LEFT): UP,
+    (pg.K_UP, RIGHT): UP,
+    (pg.K_DOWN, LEFT): DOWN,
+    (pg.K_DOWN, RIGHT): DOWN,
+    (pg.K_LEFT, UP): LEFT,
+    (pg.K_LEFT, DOWN): LEFT,
+    (pg.K_RIGHT, UP): RIGHT,
+    (pg.K_RIGHT, DOWN): RIGHT
+}
+
 # Настройка игрового окна:
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
@@ -119,7 +132,6 @@ class Snake(GameObject):
         self.positions: list[tuple[int, int]] = [SCREEN_CENTER]
         self.last: tuple[int, int] | None = None
         self.direction = choice((UP, DOWN, LEFT, RIGHT))
-        self.next_direction: tuple[int, int] | None = None
 
     def get_head_position(self) -> tuple[int, int]:
         """Возвращает координаты головы змейки."""
@@ -139,11 +151,10 @@ class Snake(GameObject):
         else:
             self.last = None
 
-    def update_direction(self) -> None:
+    def update_direction(self, key) -> None:
         """Обновляет направление после нажатия на кнопку."""
-        if self.next_direction:
-            self.direction = self.next_direction
-            self.next_direction = None
+        self.direction = KEY_DIRECTIONS.get(
+            (key, self.direction), self.direction)
 
     def draw(self) -> None:
         """Рисует голову змейки и стирает хвост."""
@@ -152,21 +163,14 @@ class Snake(GameObject):
             self.draw_cell(self.last)
 
 
-def handle_keys(snake: Snake) -> None:
+def handle_keys(snake: Snake) -> tuple[int, int]:
     """Обработка нажатий клавиш."""
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
             raise SystemExit('Нажата кнопка выхода, игра завершена.')
-        elif event.type == pg.KEYDOWN:
-            if event.key == pg.K_UP and snake.direction != DOWN:
-                snake.next_direction = UP
-            elif event.key == pg.K_DOWN and snake.direction != UP:
-                snake.next_direction = DOWN
-            elif event.key == pg.K_LEFT and snake.direction != RIGHT:
-                snake.next_direction = LEFT
-            elif event.key == pg.K_RIGHT and snake.direction != LEFT:
-                snake.next_direction = RIGHT
+        if event.type == pg.KEYDOWN:
+            snake.update_direction(event.key)
 
 
 def main():
@@ -179,7 +183,6 @@ def main():
     while True:
         clock.tick(SPEED)
         handle_keys(snake)
-        snake.update_direction()
         snake.move()
         if snake.get_head_position() == apple.position:
             snake.length += 1
