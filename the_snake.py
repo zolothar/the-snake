@@ -185,10 +185,11 @@ def main():
         clock.tick(SPEED)
         handle_keys(snake)
         snake.move()
-        if snake.get_head_position() == apple.position:
+        head = snake.get_head_position()
+        if head == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
-        elif snake.get_head_position() in snake.positions[1:]:
+        elif head in snake.positions[1:]:
             snake.reset()
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
