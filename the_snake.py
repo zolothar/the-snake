@@ -78,27 +78,28 @@ class Apple(GameObject):
     """Яблоко - пища для змейки."""
 
     def __init__(self,
-                 snake_positions: list[tuple[int, int]] | None = None
+                 forbidden_positions: list[tuple[int, int]] | None = None,
+                 color: tuple[int, int, int] = APPLE_COLOR
                  ) -> None:
         """Инициализирует яблоко, положение выбирается в случайной
         свободной клетке.
         """
-        super().__init__(APPLE_COLOR)
-        self.randomize_position(snake_positions)
+        super().__init__(color)
+        self.randomize_position(forbidden_positions)
 
     def draw(self) -> None:
         """Рисует яблоко на игровом поле."""
         self.draw_cell(self.position, self.body_color, BORDER_COLOR)
 
     def randomize_position(self,
-                           snake_positions: list[tuple[int, int]] | None
+                           forbidden_positions: list[tuple[int, int]] | None
                            ) -> None:
         """Ставит яблоко в случайную точку поля."""
         while True:
             position_x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             position_y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            if (not snake_positions
-                    or (position_x, position_y) not in snake_positions):
+            if (not forbidden_positions
+                    or (position_x, position_y) not in forbidden_positions):
                 self.position = position_x, position_y
                 break
 
@@ -106,14 +107,19 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Змейка - перемещается по полю и поедает яблоки."""
 
-    def __init__(self) -> None:
+    def __init__(self, color: tuple[int, int, int] = SNAKE_COLOR) -> None:
         """Инициализирует змейку."""
-        super().__init__(SNAKE_COLOR)
+        super().__init__(color)
+        self.reset()
+        self.direction: tuple[int, int] = RIGHT
+
+    def reset(self) -> None:
+        """Сбрасывает змейку к изначальному состоянию."""
         self.length: int = 1
         self.positions: list[tuple[int, int]] = [SCREEN_CENTER]
-        self.direction: tuple[int, int] = RIGHT
-        self.next_direction: tuple[int, int] | None = None
         self.last: tuple[int, int] | None = None
+        self.direction = choice((UP, DOWN, LEFT, RIGHT))
+        self.next_direction: tuple[int, int] | None = None
 
     def get_head_position(self) -> tuple[int, int]:
         """Возвращает координаты головы змейки."""
@@ -143,14 +149,6 @@ class Snake(GameObject):
         if self.last:
             self.draw_cell(self.last)
             self.last = None
-
-    def reset(self) -> None:
-        """Сбрасывает змейку к изначальному состоянию."""
-        self.length = 1
-        self.positions = [SCREEN_CENTER]
-        self.last = None
-        self.direction = choice((UP, DOWN, LEFT, RIGHT))
-        self.next_direction = None
 
 
 def handle_keys(snake: Snake) -> None:
