@@ -113,7 +113,7 @@ class Apple(GameObject):
         while True:
             position_x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             position_y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            if ((position_x, position_y) not in occupied_positions):
+            if (position_x, position_y) not in occupied_positions:
                 self.position = position_x, position_y
                 break
 
