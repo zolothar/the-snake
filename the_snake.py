@@ -92,27 +92,27 @@ class Apple(GameObject):
     """Яблоко - пища для змейки."""
 
     def __init__(self,
-                 occuped_positions: Container[tuple[int, int]] = (),
+                 occupied_positions: Container[tuple[int, int]] = (),
                  color: tuple[int, int, int] = APPLE_COLOR
                  ) -> None:
         """Инициализирует яблоко, положение выбирается в случайной
         свободной клетке.
         """
         super().__init__(color)
-        self.randomize_position(occuped_positions)
+        self.randomize_position(occupied_positions)
 
     def draw(self) -> None:
         """Рисует яблоко на игровом поле."""
         self.draw_cell(self.position, self.body_color, BORDER_COLOR)
 
     def randomize_position(self,
-                           occuped_positions: Container[tuple[int, int]] = ()
+                           occupied_positions: Container[tuple[int, int]] = ()
                            ) -> None:
         """Ставит яблоко в случайную точку поля."""
         while True:
             position_x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             position_y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            if ((position_x, position_y) not in occuped_positions):
+            if ((position_x, position_y) not in occupied_positions):
                 self.position = position_x, position_y
                 break
 
