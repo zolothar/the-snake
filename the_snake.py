@@ -31,15 +31,6 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвета:
-BOARD_BACKGROUND_COLOR = (0, 0, 0)
-BORDER_COLOR = (93, 216, 228)
-APPLE_COLOR = (255, 0, 0)
-SNAKE_COLOR = (0, 255, 0)
-
-# Скорость движения змейки:
-SPEED = 10
-
 # Ключ: (клавиша, старое_направление).
 # Значение: новое_направление.
 KEY_DIRECTIONS = {
@@ -52,6 +43,15 @@ KEY_DIRECTIONS = {
     (pg.K_RIGHT, UP): RIGHT,
     (pg.K_RIGHT, DOWN): RIGHT
 }
+
+# Цвета:
+BOARD_BACKGROUND_COLOR = (0, 0, 0)
+BORDER_COLOR = (93, 216, 228)
+APPLE_COLOR = (255, 0, 0)
+SNAKE_COLOR = (0, 255, 0)
+
+# Скорость движения змейки:
+SPEED = 10
 
 # Настройка игрового окна:
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -125,7 +125,6 @@ class Snake(GameObject):
         """Инициализирует змейку."""
         super().__init__(color)
         self.reset()
-        self.direction: tuple[int, int] = RIGHT
 
     def reset(self) -> None:
         """Сбрасывает змейку к изначальному состоянию."""
@@ -152,19 +151,19 @@ class Snake(GameObject):
         else:
             self.last = None
 
-    def update_direction(self, key) -> None:
+    def update_direction(self, key: int) -> None:
         """Обновляет направление после нажатия на кнопку."""
         self.direction = KEY_DIRECTIONS.get(
             (key, self.direction), self.direction)
 
     def draw(self) -> None:
         """Рисует голову змейки и стирает хвост."""
-        self.draw_cell(self.get_head_position(), self.body_color, BORDER_COLOR)
         if self.last:
             self.draw_cell(self.last)
+        self.draw_cell(self.get_head_position(), self.body_color, BORDER_COLOR)
 
 
-def handle_keys(snake: Snake) -> tuple[int, int]:
+def handle_keys(snake: Snake) -> None:
     """Обработка нажатий клавиш."""
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -174,7 +173,7 @@ def handle_keys(snake: Snake) -> tuple[int, int]:
             snake.update_direction(event.key)
 
 
-def main():
+def main() -> None:
     """Создает игровые объекты и запускает игровой цикл."""
     pg.init()
 
@@ -193,8 +192,8 @@ def main():
             snake.reset()
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
-        apple.draw()
         snake.draw()
+        apple.draw()
         pg.display.update()
 
 
